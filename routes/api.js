@@ -36,8 +36,8 @@ router
       const pages = Math.ceil(total / limit);
       const contacts = await models.Phonebook.findAll({
         where: params,
-        limit: limit,
-        offset: offset,
+        limit,
+        offset,
         order: [["createdAt", "ASC"]],
       });
       res.send(
