@@ -5,10 +5,6 @@ var { sequelize } = require("../models/index");
 var { Response } = require("../helpers/util");
 const { Op } = require("sequelize");
 
-router.route("/test").get(function (req, res) {
-  res.send("hello");
-});
-
 router
   .route("/phonebooks")
   /* GET phonebook listing. */
@@ -16,18 +12,6 @@ router
     try {
       const { name, phone } = req.query;
       let params = {};
-
-      if (name) {
-        params["name"] = {
-          [Op.iLike]: `%${name}%`,
-        };
-      }
-      if (phone) {
-        params["phone"] = sequelize.where(
-          sequelize.cast(sequelize.col("Phonebook.phone"), "varchar"),
-          { [Op.iLike]: `%${phone}%` }
-        );
-      }
 
       const phonebook = await models.Phonebook.findAll({
         where: params,
