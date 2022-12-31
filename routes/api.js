@@ -10,7 +10,7 @@ router
   .get(async function (req, res) {
     try {
       const { name, phone, mode, page } = req.query;
-      console.log("🚀 ~ file: api.js:13 ~ name, phone, mode, page ", name, phone, mode, page )
+      
       let params = {};
       let op = mode === "or" ? Op.or : Op.and;
 
@@ -33,29 +33,23 @@ router
         };
       }
 
-      const totalCount = await models.Phonebook.count()
-      const contacts = await models.Phonebook.findAndCountAll({
+      const totalCount = await models.Phonebook.count();
+      const { count, rows } = await models.Phonebook.findAndCountAll({
         where: params,
         limit,
         offset,
-        order: [["createdAt", "ASC"]],
+        order: [["id", "DESC"]],
       });
 
-      const total = contacts.count
-      const pages = Math.ceil(total / limit);
-      
+      const pages = Math.ceil(count / limit);
+
       res.send(
         new Response({
           totalCount,
-          rowCount: total,
+          rowCount: count,
           page: Number(page),
           pages,
-          query: {
-            name,
-            phone,
-            mode
-          },
-          contacts: contacts.rows
+          contacts: rows,
         })
       );
     } catch (error) {
