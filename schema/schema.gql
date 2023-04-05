@@ -1,0 +1,54 @@
+var { buildSchema } = require("graphql");
+
+var schema = buildSchema(`
+    input ContactInput {
+        name: String
+        phone: String
+    }
+
+    type CONTACT {
+        id: Int!
+        name: String
+        phone: String
+    }
+
+    type PARAMS {
+        rowCount: Int
+        totalCount: Int
+        page: Int
+        pages: Int
+        name: String
+        phone: String
+        mode: String
+    }
+
+    type DATA {
+        params: PARAMS
+        contacts: [CONTACT]
+    }
+
+    type RESPONSE_LOAD_DATA {
+        success: Boolean
+        data: DATA
+    }
+
+    type RESPONSE_CRUD_DATA {
+        success: Boolean
+        data: CONTACT
+    }
+
+    type Query {
+        hello: String
+        load(page: Int! = 1, mode: String = "and", name: String, phone: String): RESPONSE_LOAD_DATA
+    }
+
+    type Mutation {
+        add(input: ContactInput): RESPONSE_CRUD_DATA
+        update(id: Int!, input: ContactInput): RESPONSE_CRUD_DATA
+        remove(id: Int!): RESPONSE_CRUD_DATA
+    }
+`);
+
+module.exports = {
+  schema,
+};
